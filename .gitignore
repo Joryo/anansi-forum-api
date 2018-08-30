@@ -1,0 +1,8 @@
+node_modules
+.env
+coverage
+mochawesome-report
+combined.log
+error.log
+yarn-error.log
+yarn.lock

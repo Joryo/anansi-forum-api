@@ -1,0 +1,53 @@
+{
+  "name": "forum-api",
+  "version": "0.1",
+  "description": "ANANSI FORUM: A simple forum API server",
+  "scripts": {
+    "test": "yarn run test-unit",
+    "start": "node src/app.js",
+    "test-unit": "NODE_ENV=test mocha --timeout 10000 --require co-mocha --reporter mochawesome 'test/*.spec.js'",
+    "coverage": "NODE_ENV=test istanbul cover _mocha -- --timeout 10000 -R spec"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "accept-language": "^3.0.18",
+    "bcrypt": "^3.0.0",
+    "cancan": "^3.1.0",
+    "colors": "^1.1.2",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "email-validator": "^1.1.1",
+    "express": "^4.16.2",
+    "express-jwt": "^5.3.0",
+    "express-request-language": "^1.1.15",
+    "express-urlrewrite": "^1.2.0",
+    "fortune": "^5.4.1",
+    "fortune-http": "^1.2.8",
+    "fortune-json-api": "^2.1.2",
+    "fortune-mongodb": "^1.2.0",
+    "jsonwebtoken": "^7.4.3",
+    "md5": "^2.2.1",
+    "mongodb": "^3.1.1",
+    "shortid": "^2.2.8",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "co-mocha": "^1.2.2",
+    "eslint": "^4.17.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "istanbul": "^1.0.0-alpha.2",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.0.3",
+    "mock-express": "^1.2.0",
+    "proxyquire": "^2.0.1",
+    "sinon": "^6.1.4",
+    "sinon-chai": "^3.2.0"
+  }
+}
