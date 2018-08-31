@@ -22,10 +22,10 @@ class Authorization {
         return new Promise(function(resolve, reject) {
             const credentials = JSON.parse(body);
             if (!credentials.email) {
-                reject(new BadRequestError(message('MissingField', language, 'email')));
+                reject(new BadRequestError(message('MissingField', language, {field: 'email'})));
             }
             if (!credentials.password) {
-                reject(new BadRequestError(message('MissingField', language, 'password')));
+                reject(new BadRequestError(message('MissingField', language, {field: 'password'})));
             }
             // Search the member
             store.find('member', null, {match: {email: [credentials.email]}, limit: 1})
