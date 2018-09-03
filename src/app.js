@@ -119,6 +119,12 @@ database.connect(process.env.DB_HOST, process.env.DB_DATABASE)
 // Cross domain authorization
 app.use(cors());
 
+// Log request
+app.use((request, response, next) => {
+    log.verbose('Request received: ' + request.originalUrl);
+    next();
+});
+
 // Authentification check with JWT token
 app.use(
     jwt({secret: process.env.JWT_SECRET})
@@ -127,7 +133,6 @@ app.use(
 
 // Process authentification request
 app.use((request, response, next) => {
-    log.verbose('Request received: ' + request.originalUrl);
     if (request.originalUrl == '/auth') {
         let body = [];
         request.on('error', (err) => {
