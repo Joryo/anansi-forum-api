@@ -162,7 +162,7 @@ app.use((request, response, next) => {
         .then(() => {
             next();
         }).catch((error) => {
-            return httpLib.sendAPIError(response, error.code ? error.code : 500, error.message);
+            return httpLib.sendAPIError(response, error.httpCode ? error.httpCode : 500, error.message);
         });
 });
 
