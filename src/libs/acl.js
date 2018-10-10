@@ -147,7 +147,7 @@ class Acl {
      * @param  {int} memberId
      */
     clearRevokeToken(memberId) {
-        database.getConnection().collection('jwt').findOneAndDelete({id: memberId});
+        database.getConnection().collection('jwt').deleteMany({id: memberId});
     }
 }
 
