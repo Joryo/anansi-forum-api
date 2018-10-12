@@ -47,5 +47,8 @@ module.exports = {
             delete: 'registered',
             patch: 'registered',
         },
+        status: {
+            get: 'admin',
+        },
     },
 };
