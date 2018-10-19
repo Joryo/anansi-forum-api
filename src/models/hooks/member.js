@@ -78,7 +78,7 @@ Member.prototype.input = (context, record, update) => {
 * @param {object} record
 */
 Member.prototype.output = (context, record) => {
-    let {response, request: {method, meta, meta: {language, request: {user, url}}}} = context;
+    let {response, request: {method, meta}} = context;
 
     // If a new member has been created, we send the JWT Token in the response
     if (method == 'create') {

@@ -24,13 +24,14 @@ let postHook = require('./models/hooks/post.js');
 let commentHook = require('./models/hooks/comment.js');
 let tagHook = require('./models/hooks/tag.js');
 let httpLib = require('./libs/http.js');
-let authorization = require('./libs/authorization.js');
 let config = require('./config/config.js');
 let search = require('./libs/search.js');
 let indexes = require('./libs/indexes.js');
 let database = require('./libs/database.js');
 let log = require('./libs/log.js').logger;
 let aclLib = require('./libs/acl.js');
+let routes = require('./routes.js');
+
 
 // Get FortuneJS errors
 let {message, errors: {UnauthorizedError, NotFoundError, ForbiddenError}} = fortune;
@@ -119,36 +120,21 @@ database.connect(process.env.DB_HOST, process.env.DB_DATABASE)
 // Cross domain authorization
 app.use(cors());
 
+// Log request
+app.use((request, response, next) => {
+    log.verbose('Request received: ' + request.originalUrl);
+    next();
+});
+
 // Authentification check with JWT token
 app.use(
     jwt({secret: process.env.JWT_SECRET})
         .unless({path: ['/auth', {url: '/members', methods: ['POST']}]})
 );
 
-// Process authentification request
-app.use((request, response, next) => {
-    log.verbose('Request received: ' + request.originalUrl);
-    if (request.originalUrl == '/auth') {
-        let body = [];
-        request.on('error', (err) => {
-            response.statusCode = 400;
-            return response.end();
-        }).on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            authorization.getAuthorization(store, body, 'en')
-                .then((token) => {
-                    log.debug('Authentification success');
-                    return httpLib.sendAPIData(response, 200, {token: token});
-                }).catch((error) => {
-                    log.debug('Authentification fail');
-                    return httpLib.sendAPIError(response, 401, error.message);
-                });
-        });
-    } else {
-        next();
-    }
+// Authentification route
+app.post('/auth', (request, response, next) => {
+    routes.auth(request, response, next, store);
 });
 
 // Check access right of user on the ressource
@@ -157,7 +143,7 @@ app.use((request, response, next) => {
         .then(() => {
             next();
         }).catch((error) => {
-            return httpLib.sendAPIError(response, error.code ? error.code : 500, error.message);
+            return httpLib.sendAPIError(response, error.httpCode ? error.httpCode : 500, error.message);
         });
 });
 
@@ -168,7 +154,12 @@ app.use((error, request, response, next) => {
     }
 });
 
-// Process authentificated API client request
+// Status route (for authentified admin only)
+app.get('/status', (request, response, next) => {
+    routes.status(request, response, next, database);
+});
+
+// Process authentificated Api client request (with fortuneJS listener)
 app.use((request, response) => {
     let isSearchRequest = true;
     // Check if request contain a search query parameters in a first time
