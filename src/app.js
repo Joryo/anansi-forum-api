@@ -110,7 +110,7 @@ app.use(requestLanguage({
 // Init app database
 database.connect(process.env.DB_HOST, process.env.DB_DATABASE)
     .then((database) => {
-        log.verbose('Connection to MongoDB success: ' + process.env.DB_HOST);
+        log.info('Connection to MongoDB success: ' + process.env.DB_HOST);
         indexes.init(database);
     })
     .catch((error) => {
@@ -124,6 +124,11 @@ app.use(cors());
 app.use((request, response, next) => {
     log.verbose('Request received: ' + request.originalUrl);
     next();
+});
+
+// Lost password route
+app.post('/lostpassword', (request, response, next) => {
+    routes.lostPassword(request, response, store);
 });
 
 // Authentification check with JWT token
