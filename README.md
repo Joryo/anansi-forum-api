@@ -29,6 +29,9 @@ Edit the '.env.template' file with your personnal configuration before running t
 * SERVER_PORT: The listening port on the server.
 * ERROR_LOG_FILE: Filepath to the error log file.
 * COMBINED_LOG_FILE: Filepath for all log.
+* MAILER_SERVICE: Mailer service (gmail for example). See [Nodemailer supported services](https://nodemailer.com/smtp/well-known/)
+* MAILER_ADRESS: Mailer email adress
+* MAILER_PASSWORD: Mailer password
 
 ### Run the server
 
@@ -103,6 +106,12 @@ Exemple of url params with JSON API:
 * [Create tag](#create-tag)<br/>
 * [Update tag](#update-tag)<br/>
 * [Delete tag](#delete-tag)<br/>
+
+**Lost password:**<br/>
+* [Lost password](#lost-password)<br/>
+
+**Server status:**<br/>
+* [Get server status](#status)<br/>
 
 ### Login
 ----
@@ -1394,6 +1403,117 @@ Delete a single tag.
     "url": "/tags/s443e4pGqm",
     "method": "DELETE",
     "headers": {
+      "Authorization": "Bearer {jwtToken}"
+    }
+  }).done(function (response) {
+    console.log(response);
+  });
+  ```
+
+* #### Authorizations:
+  * admin
+
+### Lost password
+----
+Send an email with a JWT token to registered user.
+The content of the email depends on the data parameters.
+The JWT token will be added at the end of the redirect url.
+**The redirect url must begin with 'http(s)://'.**
+
+* #### URL:
+    /lostpassword/
+
+* #### Method:
+    `POST`
+
+* #### URL Params:
+    None
+
+* #### Data Params:
+    ```json
+    {
+        "email": "John.doe@gmail.com",
+        "subject": "Lost password",
+        "text" : "Follow this url",
+        "redirect_url" : "http://www.anansi.com/changepassword/",
+        "redirect_label" : "Click here"
+    }
+   ```
+
+* #### Success Response:
+    * **Code:** 204 <br/>
+
+* #### Error Response:
+    * **Code:** 404 NOT FOUND <br/>
+
+* #### Sample Call:
+    ```js
+  $.ajax({
+    "url": "/lostpassword/",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/vnd.api+json"
+    },
+    "data": "{\n\t\"email\": \"John.doe@gmail.com\",\n\t\"subject\" : \"Lost password\"\n,\n\t\"text\": \"Follow this url\",,\n\t\"redirect_url\": \"http://www.anansi.com/changepassword/\",\n\t\"redirect_label\": \"Click here\"}"
+  }).done(function (response) {
+    console.log(response);
+  });
+  ```
+
+* #### Authorizations:
+  * guest
+  * registered
+  * admin
+
+### Status
+----
+Get the running version af the API and the count of members, posts and comments in database.
+
+* #### URL:
+    /status/
+
+* #### Method:
+    `GET`
+
+* #### URL Params:
+    None
+
+* #### Success Response:
+    * **Code:** 200 <br/>
+      **JSONAPI data content sample:**
+      ```json
+        {
+            "jsonapi": {
+                "version": "1.0"
+            },
+            "data": {
+                "status": {
+                    "overall": {
+                        "members": 51,
+                        "posts": 200,
+                        "comments": 19858
+                    },
+                    "lastWeek": {
+                        "members": 51,
+                        "posts": 200,
+                        "comments": 19858
+                    },
+                    "version": "0.2"
+                }
+            }
+        }
+      ```
+
+* #### Error Response:
+    * **Code:** 401 UNAUTHORIZED <br/>
+
+* #### Sample Call:
+    ```js
+  $.ajax({
+    "url": "/status",
+    "method": "GET",
+    "headers": {
+      "Content-Type": "application/vnd.api+json",
       "Authorization": "Bearer {jwtToken}"
     }
   }).done(function (response) {
