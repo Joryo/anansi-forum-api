@@ -110,7 +110,7 @@ app.use(requestLanguage({
 // Init app database
 database.connect(process.env.DB_HOST, process.env.DB_DATABASE)
     .then((database) => {
-        log.verbose('Connection to MongoDB success: ' + process.env.DB_HOST);
+        log.info('Connection to MongoDB success: ' + process.env.DB_HOST);
         indexes.init(database);
     })
     .catch((error) => {
@@ -124,6 +124,11 @@ app.use(cors());
 app.use((request, response, next) => {
     log.verbose('Request received: ' + request.originalUrl);
     next();
+});
+
+// Lost password route
+app.post('/lostpassword', (request, response, next) => {
+    routes.lostPassword(request, response, store);
 });
 
 // Authentification check with JWT token
@@ -143,6 +148,7 @@ app.use((request, response, next) => {
         .then(() => {
             next();
         }).catch((error) => {
+            log.verbose('Forbiden access: ' + request.originalUrl);
             return httpLib.sendAPIError(response, error.httpCode ? error.httpCode : 500, error.message);
         });
 });
@@ -150,6 +156,7 @@ app.use((request, response, next) => {
 // Error response for bad authorization
 app.use((error, request, response, next) => {
     if (error.name === 'UnauthorizedError') {
+        log.verbose('Bad authorization:' + request.originalUrl);
         return httpLib.sendAPIError(response, 401, error.message);
     }
 });

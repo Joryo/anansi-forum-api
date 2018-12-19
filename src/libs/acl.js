@@ -108,6 +108,20 @@ class Acl {
      * @return {object} Header
      */
     getHeaderWithToken(member) {
+        return {
+            headers: {
+                Authorization: Acl.prototype.getToken(member, false),
+            },
+        };
+    }
+    /**
+     * Get token from member data
+     *
+     * @param  {object} member Member
+     * @param  {bool} temporaryToken True if the token is temporary (like for lost password token)
+     * @return {object} Token data
+     */
+    getToken(member, temporaryToken) {
         let tokenMember = {
             id: member.id,
             attributes: {
@@ -116,12 +130,10 @@ class Acl {
                 role: member.role,
             },
         };
-        let token = jwt.sign({member: tokenMember}, process.env.JWT_SECRET, {expiresIn: config.tokenExpireTime});
-        return {
-            headers: {
-                Authorization: token,
-            },
-        };
+        const expireTime = temporaryToken ? (15 * 60) : config.tokenExpireTime;
+        Acl.prototype.clearRevokeToken(member.id);
+
+        return jwt.sign({member: tokenMember}, process.env.JWT_SECRET, {expiresIn: expireTime});
     }
     /**
      * Check if JWT member Token is revoked

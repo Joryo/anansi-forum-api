@@ -34,20 +34,7 @@ class Authorization {
                     if (member) {
                         // Check password
                         if (bcrypt.compareSync(credentials.password, member.password)) {
-                            // Format the member data for token insertion
-                            let tokenMember = {
-                                id: member.id,
-                                attributes: {
-                                    email: member.email,
-                                    pseudo: member.pseudo,
-                                    role: member.role,
-                                },
-                            };
-                            // Send the JWT Token
-                            const token = jwt.sign({member: tokenMember},
-                                process.env.JWT_SECRET, {expiresIn: config.tokenExpireTime});
-                            acl.clearRevokeToken(member.id);
-                            return resolve(token);
+                            return resolve(acl.getToken(member, false));
                         }
                     }
                     return reject(new UnauthorizedError(message('InvalidCredentials', language)));
