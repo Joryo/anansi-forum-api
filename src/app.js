@@ -148,6 +148,7 @@ app.use((request, response, next) => {
         .then(() => {
             next();
         }).catch((error) => {
+            log.verbose('Forbiden access: ' + request.originalUrl);
             return httpLib.sendAPIError(response, error.httpCode ? error.httpCode : 500, error.message);
         });
 });
@@ -155,6 +156,7 @@ app.use((request, response, next) => {
 // Error response for bad authorization
 app.use((error, request, response, next) => {
     if (error.name === 'UnauthorizedError') {
+        log.verbose('Bad authorization:' + request.originalUrl);
         return httpLib.sendAPIError(response, 401, error.message);
     }
 });
