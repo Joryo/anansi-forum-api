@@ -1,4 +1,7 @@
-![anansi-forum](https://raw.githubusercontent.com/joryo/anansi-forum-api/master/logo.png)
+<p align="center">
+  <img width="250" src="https://raw.githubusercontent.com/joryo/anansi-forum-api/master/logo.png">
+</p>
+
 
 A simple forum API server running on Node.js, [Fortune.js](http://fortune.js.org/) and MongoDB.
 

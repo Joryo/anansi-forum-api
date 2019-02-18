@@ -1,6 +1,6 @@
 {
   "name": "forum-api",
-  "version": "0.2",
+  "version": "0.3.0",
   "description": "ANANSI FORUM: A simple forum API server",
   "scripts": {
     "test": "yarn run test-unit",
