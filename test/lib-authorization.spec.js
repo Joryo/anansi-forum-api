@@ -29,6 +29,9 @@ describe('Authorization Library', () => {
         sandbox.jwtMock = {};
         sandbox.acl = {
             clearRevokeToken: () => {},
+            getToken: () => {
+                return 'a token';
+            },
         };
         sandbox.authorization = proxyquire('../src/libs/authorization.js', {
             'bcrypt': sandbox.bcryptMock,

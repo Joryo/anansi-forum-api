@@ -94,6 +94,9 @@ Member.prototype.output = (context, record) => {
             if (member.attributes.email != record.email && !aclLib.isAdmin(member)) {
                 record.email = md5(record.email);
             }
+            if (aclLib.isSuperAdmin(member)) {
+                record.role = 'superadmin';
+            }
         }
         delete record.password;
     }

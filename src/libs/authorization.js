@@ -38,7 +38,7 @@ class Authorization {
                         }
                     }
                     return reject(new UnauthorizedError(message('InvalidCredentials', language)));
-                }).catch((error) => {
+                }).catch(() => {
                     reject(new UnauthorizedError(message('InvalidCredentials', language)));
                 });
         });
