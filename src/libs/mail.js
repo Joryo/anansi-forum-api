@@ -1,7 +1,4 @@
-'use strict';
-
 let nodemailer = require('nodemailer');
-
 let log = require('./log.js').logger;
 
 /**

@@ -1,5 +1,3 @@
-'use strict';
-
 let {errors: {BadRequestError}, message} = require('fortune');
 
 /**
@@ -57,6 +55,7 @@ class Http {
     sendAPIData(response, code, data) {
         response.statusCode = code;
         response.setHeader('content-type', 'application/vnd.api+json');
+        response.setHeader('Access-Control-Allow-Origin', '*');
         return response.end(JSON.stringify({
             jsonapi: {
                 'version': '1.0',
@@ -68,13 +67,12 @@ class Http {
      * Check POST parameters on a request
      * @param  {array} params - Parameters list
      * @param  {array} record - Request parameters (fortune)
-     * @param  {string} language - User language
      * @throw {BadRequestError} Missing POST parameters
      */
-    checkRequestParams(params, record, language) {
+    checkRequestParams(params, record) {
         for (let field of params) {
             if (!(field in record)) {
-                throw new BadRequestError(message('MissingField', language, {field}));
+                throw new BadRequestError(message('MissingField', 'en', {field}));
             }
         }
     }

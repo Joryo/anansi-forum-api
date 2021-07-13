@@ -1,5 +1,3 @@
-'use strict';
-
 let winston = require('winston');
 let colors = require('colors');
 

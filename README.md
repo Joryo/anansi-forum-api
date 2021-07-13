@@ -965,7 +965,7 @@ Returns data about multiple comments.
 Create a single comment.
 
 * #### URL:
-    /tags
+    /comments
 
 * #### Method:
     `POST`
@@ -982,7 +982,7 @@ Create a single comment.
       **JSONAPI data content sample:**
       ```json
       {
-        "type": "posts",
+        "type": "comments",
         "id": "s443e4pGqm",
         "attributes": {
             "text": "Comment",

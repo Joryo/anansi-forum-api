@@ -1,5 +1,3 @@
-'use strict';
-
 let config = require('../config/search.js');
 let appConfig = require('../config/config.js');
 let database = require('./database.js');

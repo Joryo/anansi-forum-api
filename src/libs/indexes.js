@@ -1,5 +1,3 @@
-'use strict';
-
 let recordTypes = require('../models/recordTypes.js');
 let searchConfig = require('../config/search.js');
 let log = require('./log.js');

@@ -29,7 +29,7 @@ const logMock = {
 };
 
 const shouldThrowError = (sandbox, method, url, user, errorName) => {
-    return sandbox.acl.canAccess(method, url, user, 'en')
+    return sandbox.acl.canAccess(method, url, user)
         .then(() => {
             assert(false, 'access should not be ok');
         })
@@ -39,7 +39,7 @@ const shouldThrowError = (sandbox, method, url, user, errorName) => {
 };
 
 const shouldNotThrowError = (sandbox, method, url, user) => {
-    return sandbox.acl.canAccess(method, url, user, 'en')
+    return sandbox.acl.canAccess(method, url, user)
         .then(() => {
             assert(true, 'access is ok');
         })
@@ -153,21 +153,6 @@ describe('Acl Library', () => {
             assert.isString(result);
             assert.notEqual(result, password);
             assert.notMatch(result, /toto/, 'password not hashed');
-        });
-    });
-
-    describe('getHeaderWithToken', () => {
-        it('should return a header with authorization string inside', () => {
-            const member = {
-                id: 'uDyTyljkc',
-                email: 'test@test.com',
-                pseudo: 'testpseudo',
-                role: 'testrole',
-            };
-            const signSpy = sandbox.spy(sandbox.jwt, 'sign');
-            const result = sandbox.acl.getHeaderWithToken(member);
-            signSpy.should.have.been.calledOnce;
-            chai.expect(result).to.have.nested.property('headers.Authorization').that.is.a('string');
         });
     });
 });

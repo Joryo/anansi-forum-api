@@ -6,10 +6,8 @@ const assert = require('chai').assert;
 
 let sandbox;
 
-const language = 'en';
-
 const shouldReturnBadRequestError = (sandbox, body) => {
-    return sandbox.authorization.getAuthorization({}, body, language)
+    return sandbox.authorization.getAuthorization({}, body)
     .then(() => {
         assert(false);
     }).catch((error) => {
@@ -29,6 +27,9 @@ describe('Authorization Library', () => {
         sandbox.jwtMock = {};
         sandbox.acl = {
             clearRevokeToken: () => {},
+            getToken: () => {
+                return 'a token';
+            },
         };
         sandbox.authorization = proxyquire('../src/libs/authorization.js', {
             'bcrypt': sandbox.bcryptMock,
@@ -57,7 +58,7 @@ describe('Authorization Library', () => {
             }};
 
             return sandbox.authorization.getAuthorization(store,
-                '{"password": "user_password","email": "user_mail"}', language)
+                '{"password": "user_password","email": "user_mail"}')
             .then((result) => {
                 assert.equal(token, result);
             }).catch((error) => {
@@ -86,7 +87,7 @@ describe('Authorization Library', () => {
                 );
             }};
             return sandbox.authorization.getAuthorization(store,
-                '{"password": "user_password_false","email": "user_mail"}', language)
+                '{"password": "user_password_false","email": "user_mail"}')
             .then(() => {
                 assert(false, 'promise resolved');
             }).catch((error) => {
@@ -99,7 +100,7 @@ describe('Authorization Library', () => {
                 return Promise.reject(false);
             }};
             return sandbox.authorization.getAuthorization(store,
-                '{"password": "user_pass","email": "user_mail"}', language)
+                '{"password": "user_pass","email": "user_mail"}')
             .then(() => {
                 assert(false, 'promise resolved');
             }).catch((error) => {

@@ -1,9 +1,3 @@
-/**
- * Database objects
- */
-
-'use strict';
-
 module.exports = {
     /**
     * Forum member

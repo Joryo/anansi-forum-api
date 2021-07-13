@@ -4,9 +4,9 @@
 
 module.exports = {
     // Record
-    'post' :
+    'post':
         {
             // Record field : search library function to call
-            'title' : 'searchPostByTitle'
-        }
+            'title': 'searchPostByTitle',
+        },
 };

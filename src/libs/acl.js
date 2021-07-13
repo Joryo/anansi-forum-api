@@ -1,9 +1,6 @@
-'use strict';
-
 let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
 let {errors: {ForbiddenError, UnauthorizedError, NotFoundError}, message} = require('fortune');
-
 let aclConfig = require('../config/acl.js');
 let config = require('../config/config.js');
 let database = require('./database.js');
@@ -18,10 +15,9 @@ class Acl {
      * @param {String} method Http call method (GET, POST..)
      * @param {String} url Called url
      * @param {Object} user Connected user
-     * @param {string} language
      * @return {Bool} true if member has access to the ressource
      */
-    async canAccess(method, url, user, language) {
+    async canAccess(method, url, user) {
         let member = {id: 0, attributes: {email: 'guest', role: 'guest'}};
         if (typeof (user) !== 'undefined') {
             member = user.member;
@@ -31,10 +27,10 @@ class Acl {
             isRevoked = await module.exports.tokenIsRevoked(member.id);
         } catch (error) {
             log.error('Fail ro get revoked token');
-            throw new UnauthorizedError(message('ExpiredToken', language));
+            throw new UnauthorizedError(message('ExpiredToken', 'en'));
         }
         if (isRevoked) {
-            throw new UnauthorizedError(message('ExpiredToken', language));
+            throw new UnauthorizedError(message('ExpiredToken', 'en'));
         }
         url = url.split('?')[0].split('/')[1];
         method = method.toLowerCase();
@@ -48,11 +44,11 @@ class Acl {
         // Check member token
         if (!member.attributes || !member.attributes.role || !member.attributes.email) {
             log.warn('Token malformed');
-            throw new UnauthorizedError(message('MalformedToken', language));
+            throw new UnauthorizedError(message('MalformedToken', 'en'));
         }
         // Role doesn't exist
         if (typeof (aclConfig.roles[member.attributes.role]) === 'undefined') {
-            throw new ForbiddenError(message('InvalidRole', language));
+            throw new ForbiddenError(message('InvalidRole', 'en'));
         }
         // The resources path is not registered in acl config
         if (typeof (aclConfig.authorizations[url]) === 'undefined'
@@ -64,7 +60,7 @@ class Acl {
             return true;
         }
         // The member can't access the resource
-        throw new ForbiddenError(message('BadRole', language, {authorizedRole: authorizedRole}));
+        throw new ForbiddenError(message('BadRole', 'en', {authorizedRole: authorizedRole}));
     }
     /**
      * Indicates if the member is admin
