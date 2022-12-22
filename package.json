@@ -25,7 +25,7 @@
     "fortune-http": "^1.2.8",
     "fortune-json-api": "^2.1.2",
     "fortune-mongodb": "^1.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "md5": "^2.2.1",
     "mongodb": "^3.1.1",
     "nodemailer": "^6.6.2",
